@@ -14,16 +14,349 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      courses: {
+        Row: {
+          career_prospects: string[] | null
+          created_at: string
+          description: string | null
+          duration: string | null
+          education_level: Database["public"]["Enums"]["education_level"]
+          id: string
+          name: string
+          requirements: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          career_prospects?: string[] | null
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          education_level: Database["public"]["Enums"]["education_level"]
+          id?: string
+          name: string
+          requirements?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          career_prospects?: string[] | null
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          education_level?: Database["public"]["Enums"]["education_level"]
+          id?: string
+          name?: string
+          requirements?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      mentorship_requests: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          id: string
+          message: string
+          status: string
+          subject: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          status?: string
+          subject: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          status?: string
+          subject?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          career_interests: string[] | null
+          created_at: string
+          current_education_level:
+            | Database["public"]["Enums"]["education_level"]
+            | null
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          onboarding_completed: boolean
+          preferred_country: string | null
+          preferred_location: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          career_interests?: string[] | null
+          created_at?: string
+          current_education_level?:
+            | Database["public"]["Enums"]["education_level"]
+            | null
+          email: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          onboarding_completed?: boolean
+          preferred_country?: string | null
+          preferred_location?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          career_interests?: string[] | null
+          created_at?: string
+          current_education_level?:
+            | Database["public"]["Enums"]["education_level"]
+            | null
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          onboarding_completed?: boolean
+          preferred_country?: string | null
+          preferred_location?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      regions: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      school_courses: {
+        Row: {
+          course_id: string
+          created_at: string
+          fees_range: string | null
+          id: string
+          school_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          fees_range?: string | null
+          id?: string
+          school_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          fees_range?: string | null
+          id?: string
+          school_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_courses_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_courses_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      school_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          rating: number
+          school_id: string
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          school_id: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          school_id?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_reviews_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schools: {
+        Row: {
+          address: string | null
+          city: string | null
+          cover_image_url: string | null
+          created_at: string
+          curriculum_types: Database["public"]["Enums"]["curriculum_type"][]
+          description: string | null
+          education_levels: Database["public"]["Enums"]["education_level"][]
+          email: string | null
+          established_year: number | null
+          extracurricular_activities: string[] | null
+          facilities: string[] | null
+          featured: boolean | null
+          id: string
+          logo_url: string | null
+          name: string
+          phone: string | null
+          rating: number | null
+          region_id: string | null
+          school_type: Database["public"]["Enums"]["school_type"]
+          slug: string
+          student_population: number | null
+          teacher_student_ratio: string | null
+          total_reviews: number | null
+          updated_at: string
+          verified: boolean | null
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          curriculum_types: Database["public"]["Enums"]["curriculum_type"][]
+          description?: string | null
+          education_levels: Database["public"]["Enums"]["education_level"][]
+          email?: string | null
+          established_year?: number | null
+          extracurricular_activities?: string[] | null
+          facilities?: string[] | null
+          featured?: boolean | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          phone?: string | null
+          rating?: number | null
+          region_id?: string | null
+          school_type: Database["public"]["Enums"]["school_type"]
+          slug: string
+          student_population?: number | null
+          teacher_student_ratio?: string | null
+          total_reviews?: number | null
+          updated_at?: string
+          verified?: boolean | null
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          curriculum_types?: Database["public"]["Enums"]["curriculum_type"][]
+          description?: string | null
+          education_levels?: Database["public"]["Enums"]["education_level"][]
+          email?: string | null
+          established_year?: number | null
+          extracurricular_activities?: string[] | null
+          facilities?: string[] | null
+          featured?: boolean | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          phone?: string | null
+          rating?: number | null
+          region_id?: string | null
+          school_type?: Database["public"]["Enums"]["school_type"]
+          slug?: string
+          student_population?: number | null
+          teacher_student_ratio?: string | null
+          total_reviews?: number | null
+          updated_at?: string
+          verified?: boolean | null
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schools_region_id_fkey"
+            columns: ["region_id"]
+            isOneToOne: false
+            referencedRelation: "regions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { user_uuid: string }
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
     }
     Enums: {
-      [_ in never]: never
+      curriculum_type:
+        | "ghanaian"
+        | "british"
+        | "american"
+        | "ib"
+        | "french"
+        | "other"
+      education_level: "creche" | "primary" | "jhs" | "shs" | "tertiary"
+      school_type: "public" | "private"
+      user_role: "student" | "graduate" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +483,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      curriculum_type: [
+        "ghanaian",
+        "british",
+        "american",
+        "ib",
+        "french",
+        "other",
+      ],
+      education_level: ["creche", "primary", "jhs", "shs", "tertiary"],
+      school_type: ["public", "private"],
+      user_role: ["student", "graduate", "admin"],
+    },
   },
 } as const

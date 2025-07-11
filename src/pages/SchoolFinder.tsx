@@ -108,6 +108,7 @@ export default function SchoolFinder() {
       const { data, error } = await query;
 
       if (error) throw error;
+      console.log('Fetched schools:', data); // Debug log
       setSchools(data || []);
     } catch (error) {
       console.error('Error fetching schools:', error);

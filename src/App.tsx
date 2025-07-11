@@ -9,6 +9,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
+import Dashboard from "./pages/Dashboard";
 import SchoolFinder from "./pages/SchoolFinder";
 import CourseMatch from "./pages/CourseMatch";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -27,7 +28,14 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/course-match" element={<CourseMatch />} />
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute requireOnboarding>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
             <Route 
               path="/school-finder" 
               element={
@@ -36,6 +44,7 @@ const App = () => (
                 </ProtectedRoute>
               } 
             />
+            <Route path="/course-match" element={<CourseMatch />} />
             <Route 
               path="/admin" 
               element={<AdminDashboard />} 

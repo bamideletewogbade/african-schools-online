@@ -1,10 +1,30 @@
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, GraduationCap } from "lucide-react";
+import { Menu, X, GraduationCap, User, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
+
+  const handleAuthClick = () => {
+    navigate('/auth');
+  };
 
   return (
     <nav className="bg-background/95 backdrop-blur-sm border-b border-border sticky top-0 z-50">
@@ -35,10 +55,44 @@ const Navigation = () => {
             </Link>
           </div>
 
-          {/* Auth Buttons */}
+          {/* Auth Section */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline">Sign In</Button>
-            <Button>Get Started</Button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center space-x-2">
+                    <User className="h-4 w-4" />
+                    <span>{profile?.first_name || user.email}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">
+                      <User className="h-4 w-4 mr-2" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  {profile?.role === 'admin' && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin">
+                        <GraduationCap className="h-4 w-4 mr-2" />
+                        Admin Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button variant="outline" onClick={handleAuthClick}>Sign In</Button>
+                <Button onClick={handleAuthClick}>Get Started</Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -92,9 +146,28 @@ const Navigation = () => {
             >
               Mentorship
             </Link>
+            
             <div className="flex flex-col space-y-2 pt-4">
-              <Button variant="outline" className="w-full">Sign In</Button>
-              <Button className="w-full">Get Started</Button>
+              {user ? (
+                <>
+                  <Button variant="outline" asChild className="w-full">
+                    <Link to="/profile">{profile?.first_name || user.email}</Link>
+                  </Button>
+                  {profile?.role === 'admin' && (
+                    <Button variant="outline" asChild className="w-full">
+                      <Link to="/admin">Admin Dashboard</Link>
+                    </Button>
+                  )}
+                  <Button variant="outline" onClick={handleSignOut} className="w-full">
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" onClick={handleAuthClick} className="w-full">Sign In</Button>
+                  <Button onClick={handleAuthClick} className="w-full">Get Started</Button>
+                </>
+              )}
             </div>
           </div>
         )}

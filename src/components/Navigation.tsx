@@ -1,3 +1,4 @@
+
 import { useState } from "react"
 import { useAuth } from "@/hooks/useAuth"
 import {
@@ -76,22 +77,22 @@ export function Navigation() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background">
+    <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 border-b border-primary/10 shadow-soft">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
         <Sheet>
           <SheetTrigger asChild>
             <Button
               variant="ghost"
               size="sm"
-              className="mr-2 flex h-8 w-8 items-center justify-center sm:hidden"
+              className="mr-2 flex h-8 w-8 items-center justify-center sm:hidden hover:bg-primary/10"
             >
               <MenuIcon className="h-4 w-4" />
               <span className="sr-only">Open Menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="pr-0">
+          <SheetContent side="left" className="pr-0 bg-white/95 backdrop-blur-md">
             <SheetHeader className="pl-10 pb-4 pt-6">
-              <SheetTitle>Menu</SheetTitle>
+              <SheetTitle className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Menu</SheetTitle>
               <SheetDescription>
                 Navigate through the app and manage your profile.
               </SheetDescription>
@@ -100,20 +101,20 @@ export function Navigation() {
               <div className="flex flex-col space-y-2">
                 {navigationItems.map((item) => (
                   <Link key={item.href} to={item.href}>
-                    <Button variant="ghost" className="justify-start">
+                    <Button variant="ghost" className="justify-start hover:bg-primary/10">
                       <item.icon className="mr-2 h-4 w-4" />
                       {item.title}
                     </Button>
                   </Link>
                 ))}
                 {user ? (
-                  <Button variant="ghost" className="justify-start" onClick={handleSignOut}>
+                  <Button variant="ghost" className="justify-start hover:bg-destructive/10" onClick={handleSignOut}>
                     <LogOut className="mr-2 h-4 w-4" />
                     Sign Out
                   </Button>
                 ) : (
                   <Link to="/auth">
-                    <Button variant="ghost" className="justify-start">
+                    <Button variant="ghost" className="justify-start hover:bg-primary/10">
                       <LogOut className="mr-2 h-4 w-4" />
                       Sign In
                     </Button>
@@ -123,15 +124,17 @@ export function Navigation() {
             </div>
           </SheetContent>
         </Sheet>
-        <Link to="/" className="mr-auto font-bold text-lg">
-          SchoolFinder
+        
+        <Link to="/" className="mr-auto font-bold text-xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          Africa Schools Online
         </Link>
+        
         <NavigationMenu className="hidden sm:flex">
           <NavigationMenuList>
             {navigationItems.map((item) => (
               <NavigationMenuItem key={item.href}>
                 <Link to={item.href} className="outline-none">
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} hover:bg-primary/10 hover:text-primary transition-all duration-300`}>
                     <item.icon className="mr-2 h-4 w-4" />
                     {item.title}
                   </NavigationMenuLink>
@@ -140,13 +143,14 @@ export function Navigation() {
             ))}
           </NavigationMenuList>
         </NavigationMenu>
+        
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+              <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-primary/10">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="https://github.com/shadcn.png" alt="Avatar" />
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white">
                     {profile?.first_name?.[0]}
                     {profile?.last_name?.[0]}
                   </AvatarFallback>
@@ -154,29 +158,34 @@ export function Navigation() {
                 <span className="sr-only">Open user menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border-primary/20">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuItem asChild>
-                <Link to="/profile">
+                <Link to="/profile" className="hover:bg-primary/10">
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/settings">
+                <Link to="/settings" className="hover:bg-primary/10">
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut}>
+              <DropdownMenuItem onClick={handleSignOut} className="hover:bg-destructive/10">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Sign out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button onClick={handleGetStarted}>Get Started</Button>
+          <Button 
+            onClick={handleGetStarted}
+            className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-card hover:shadow-soft transition-all duration-300 hover:scale-105"
+          >
+            Get Started
+          </Button>
         )}
       </div>
     </header>

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
@@ -9,6 +8,7 @@ import { SchoolsTab } from '@/components/admin/SchoolsTab';
 import { CoursesTab } from '@/components/admin/CoursesTab';
 import { UsersTab } from '@/components/admin/UsersTab';
 import { School, BookOpen, Users, BarChart3 } from 'lucide-react';
+import { NewsTab } from '@/components/admin/NewsTab';
 
 export default function AdminDashboard() {
   const { user, profile, loading } = useAuth();
@@ -81,6 +81,7 @@ export default function AdminDashboard() {
           <TabsList>
             <TabsTrigger value="schools">Schools</TabsTrigger>
             <TabsTrigger value="courses">Courses</TabsTrigger>
+            <TabsTrigger value="news">News</TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
           </TabsList>
 
@@ -90,6 +91,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="courses">
             <CoursesTab />
+          </TabsContent>
+
+          <TabsContent value="news">
+            <NewsTab />
           </TabsContent>
 
           <TabsContent value="users">

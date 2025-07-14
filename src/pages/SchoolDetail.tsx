@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,6 +11,7 @@ import {
   Calendar, Award, Building, GraduationCap, ArrowLeft 
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { SchoolNews } from '@/components/SchoolNews';
 
 interface School {
   id: string;
@@ -207,10 +207,11 @@ export default function SchoolDetail() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="academics">Academics</TabsTrigger>
             <TabsTrigger value="facilities">Facilities</TabsTrigger>
+            <TabsTrigger value="news">News</TabsTrigger>
             <TabsTrigger value="contact">Contact</TabsTrigger>
           </TabsList>
 
@@ -342,6 +343,10 @@ export default function SchoolDetail() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="news">
+            <SchoolNews schoolId={school.id} />
           </TabsContent>
 
           <TabsContent value="contact">

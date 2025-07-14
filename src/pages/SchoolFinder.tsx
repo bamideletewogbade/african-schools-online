@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Search, Filter, MapPin, Star, Users, BookOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface School {
   id: string;
@@ -46,6 +47,7 @@ export default function SchoolFinder() {
   const [selectedType, setSelectedType] = useState('');
   const [selectedCurriculum, setSelectedCurriculum] = useState('');
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchRegions();
@@ -120,6 +122,10 @@ export default function SchoolFinder() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSchoolClick = (school: School) => {
+    navigate(`/school/${school.slug}`);
   };
 
   const renderEducationLevels = (levels: string[]) => {
@@ -259,7 +265,11 @@ export default function SchoolFinder() {
         {/* Schools Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {schools.map((school) => (
-            <Card key={school.id} className="hover-scale cursor-pointer shadow-subtle hover:shadow-elegant transition-all duration-300">
+            <Card 
+              key={school.id} 
+              className="hover-scale cursor-pointer shadow-subtle hover:shadow-elegant transition-all duration-300"
+              onClick={() => handleSchoolClick(school)}
+            >
               <div className="relative">
                 {school.cover_image_url && (
                   <img
@@ -341,7 +351,10 @@ export default function SchoolFinder() {
                     <Badge variant={school.school_type === 'private' ? 'default' : 'secondary'}>
                       {school.school_type}
                     </Badge>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" onClick={(e) => {
+                      e.stopPropagation();
+                      handleSchoolClick(school);
+                    }}>
                       <BookOpen className="h-4 w-4 mr-1" />
                       View Details
                     </Button>

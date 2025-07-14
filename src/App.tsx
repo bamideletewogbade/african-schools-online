@@ -11,6 +11,7 @@ import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import SchoolFinder from "./pages/SchoolFinder";
+import SchoolDetail from "./pages/SchoolDetail";
 import CourseMatch from "./pages/CourseMatch";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
@@ -41,6 +42,14 @@ const App = () => (
               element={
                 <ProtectedRoute requireOnboarding>
                   <SchoolFinder />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/school/:slug" 
+              element={
+                <ProtectedRoute requireOnboarding>
+                  <SchoolDetail />
                 </ProtectedRoute>
               } 
             />

@@ -11,15 +11,20 @@ import { Textarea } from '@/components/ui/textarea';
 import { Plus, Search, Edit, Trash2, Eye } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import type { Database } from '@/integrations/supabase/types';
+
+type CurriculumType = Database['public']['Enums']['curriculum_type'];
+type EducationLevel = Database['public']['Enums']['education_level'];
+type SchoolType = Database['public']['Enums']['school_type'];
 
 interface School {
   id: string;
   name: string;
   slug: string;
   city: string;
-  school_type: string;
-  education_levels: string[];
-  curriculum_types: string[];
+  school_type: SchoolType;
+  education_levels: EducationLevel[];
+  curriculum_types: CurriculumType[];
   verified: boolean;
   featured: boolean;
   description?: string;
@@ -44,9 +49,9 @@ export function SchoolsTab() {
     description: '',
     city: '',
     region_id: '',
-    school_type: 'public',
-    education_levels: [] as string[],
-    curriculum_types: [] as string[]
+    school_type: 'public' as SchoolType,
+    education_levels: [] as EducationLevel[],
+    curriculum_types: [] as CurriculumType[]
   });
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -110,7 +115,7 @@ export function SchoolsTab() {
 
       const { error } = await supabase
         .from('schools')
-        .insert([schoolData]);
+        .insert(schoolData);
 
       if (error) throw error;
 
@@ -192,9 +197,9 @@ export function SchoolsTab() {
       description: '',
       city: '',
       region_id: '',
-      school_type: 'public',
-      education_levels: [],
-      curriculum_types: []
+      school_type: 'public' as SchoolType,
+      education_levels: [] as EducationLevel[],
+      curriculum_types: [] as CurriculumType[]
     });
   };
 
@@ -361,7 +366,7 @@ export function SchoolsTab() {
 
               <div>
                 <label className="text-sm font-medium">School Type</label>
-                <Select value={formData.school_type} onValueChange={(value) => setFormData({ ...formData, school_type: value })}>
+                <Select value={formData.school_type} onValueChange={(value: SchoolType) => setFormData({ ...formData, school_type: value })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -500,7 +505,7 @@ export function SchoolsTab() {
               </div>
               <div>
                 <label className="text-sm font-medium">School Type</label>
-                <Select value={formData.school_type} onValueChange={(value) => setFormData({ ...formData, school_type: value })}>
+                <Select value={formData.school_type} onValueChange={(value: SchoolType) => setFormData({ ...formData, school_type: value })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>

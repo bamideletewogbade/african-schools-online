@@ -1,6 +1,6 @@
 
 import { useAuth } from '@/hooks/useAuth';
-import Navigation from '@/components/Navigation';
+import { Navigation } from '@/components/Navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Users, Award, TrendingUp } from 'lucide-react';

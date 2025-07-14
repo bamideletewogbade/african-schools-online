@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, MapPin, Star, Users, BookOpen } from 'lucide-react';
+import { Search, Filter, MapPin, Star, Users, BookOpen, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -162,11 +162,11 @@ export default function SchoolFinder() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="min-h-screen bg-gradient-subtle">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-accent bg-clip-text text-transparent">
             Find Your Perfect School
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -175,9 +175,9 @@ export default function SchoolFinder() {
         </div>
 
         {/* Search and Filters */}
-        <Card className="mb-8 shadow-elegant">
+        <Card className="mb-8 shadow-card bg-card/95 backdrop-blur-sm border border-border/50">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-card-foreground">
               <Filter className="h-5 w-5" />
               Search & Filter Schools
             </CardTitle>
@@ -190,14 +190,14 @@ export default function SchoolFinder() {
                 placeholder="Search schools by name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-background/50"
               />
             </div>
 
             {/* Filter Row */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-background/50">
                   <SelectValue placeholder="Select Region" />
                 </SelectTrigger>
                 <SelectContent>
@@ -210,7 +210,7 @@ export default function SchoolFinder() {
               </Select>
 
               <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-background/50">
                   <SelectValue placeholder="Education Level" />
                 </SelectTrigger>
                 <SelectContent>
@@ -223,7 +223,7 @@ export default function SchoolFinder() {
               </Select>
 
               <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-background/50">
                   <SelectValue placeholder="School Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -233,7 +233,7 @@ export default function SchoolFinder() {
               </Select>
 
               <Select value={selectedCurriculum} onValueChange={setSelectedCurriculum}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-background/50">
                   <SelectValue placeholder="Curriculum" />
                 </SelectTrigger>
                 <SelectContent>
@@ -267,95 +267,104 @@ export default function SchoolFinder() {
           {schools.map((school) => (
             <Card 
               key={school.id} 
-              className="hover-scale cursor-pointer shadow-subtle hover:shadow-elegant transition-all duration-300"
+              className="group hover:scale-[1.02] cursor-pointer shadow-card hover:shadow-soft transition-all duration-300 bg-card/95 backdrop-blur-sm border border-border/50 overflow-hidden"
               onClick={() => handleSchoolClick(school)}
             >
-              <div className="relative">
-                {school.cover_image_url && (
+              {/* School Image */}
+              <div className="relative h-48 overflow-hidden">
+                {school.cover_image_url ? (
                   <img
                     src={school.cover_image_url}
-                    alt={school.name}
-                    className="w-full h-48 object-cover rounded-t-lg"
+                    alt={`${school.name} campus`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                )}
-                {school.featured && (
-                  <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground">
-                    Featured
-                  </Badge>
-                )}
-                {school.verified && (
-                  <Badge variant="secondary" className="absolute top-2 left-2">
-                    Verified
-                  </Badge>
-                )}
-              </div>
-
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg mb-1">{school.name}</CardTitle>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                      <MapPin className="h-4 w-4" />
-                      <span>{school.city}, {school.regions?.name}</span>
-                    </div>
+                ) : (
+                  <div className="w-full h-full bg-gradient-card flex items-center justify-center">
+                    <BookOpen className="h-16 w-16 text-muted-foreground/50" />
                   </div>
-                  {school.logo_url && (
+                )}
+                
+                {/* Badges overlay */}
+                <div className="absolute top-2 right-2 flex gap-2">
+                  {school.featured && (
+                    <Badge className="bg-primary text-primary-foreground shadow-sm">
+                      Featured
+                    </Badge>
+                  )}
+                  {school.verified && (
+                    <Badge variant="secondary" className="shadow-sm">
+                      Verified
+                    </Badge>
+                  )}
+                </div>
+
+                {/* Logo overlay */}
+                {school.logo_url && (
+                  <div className="absolute bottom-2 left-2">
                     <img
                       src={school.logo_url}
                       alt={`${school.name} logo`}
-                      className="w-12 h-12 object-contain rounded"
+                      className="w-12 h-12 object-contain rounded-lg bg-white/90 p-1 shadow-sm"
                     />
-                  )}
+                  </div>
+                )}
+              </div>
+
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg mb-2 line-clamp-1">{school.name}</CardTitle>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <span className="line-clamp-1">{school.city}, {school.regions?.name}</span>
                 </div>
 
                 <div className="flex items-center gap-4 text-sm">
                   <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span>{school.rating.toFixed(1)}</span>
+                    <span className="font-medium">{school.rating.toFixed(1)}</span>
                     <span className="text-muted-foreground">({school.total_reviews})</span>
                   </div>
                   {school.student_population && (
                     <div className="flex items-center gap-1">
                       <Users className="h-4 w-4 text-muted-foreground" />
-                      <span>{school.student_population} students</span>
+                      <span className="text-muted-foreground">{school.student_population}</span>
                     </div>
                   )}
                 </div>
               </CardHeader>
 
-              <CardContent>
-                <CardDescription className="mb-4 line-clamp-2">
+              <CardContent className="pt-0">
+                <CardDescription className="mb-4 line-clamp-2 text-sm">
                   {school.description}
                 </CardDescription>
 
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm font-medium mb-1">Education Levels:</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs font-medium mb-1 text-foreground">Education Levels:</p>
+                    <p className="text-xs text-muted-foreground">
                       {renderEducationLevels(school.education_levels)}
                     </p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium mb-1">Curriculum:</p>
+                    <p className="text-xs font-medium mb-1 text-foreground">Curriculum:</p>
                     <div className="flex flex-wrap gap-1">
                       {renderCurriculumTypes(school.curriculum_types).map((curriculum, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
+                        <Badge key={index} variant="outline" className="text-xs py-0">
                           {curriculum}
                         </Badge>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2">
-                    <Badge variant={school.school_type === 'private' ? 'default' : 'secondary'}>
+                  <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                    <Badge variant={school.school_type === 'private' ? 'default' : 'secondary'} className="text-xs">
                       {school.school_type}
                     </Badge>
-                    <Button variant="ghost" size="sm" onClick={(e) => {
+                    <Button variant="ghost" size="sm" className="h-8 text-xs" onClick={(e) => {
                       e.stopPropagation();
                       handleSchoolClick(school);
                     }}>
-                      <BookOpen className="h-4 w-4 mr-1" />
+                      <BookOpen className="h-3 w-3 mr-1" />
                       View Details
                     </Button>
                   </div>
@@ -366,7 +375,7 @@ export default function SchoolFinder() {
         </div>
 
         {!loading && schools.length === 0 && (
-          <Card className="text-center py-12">
+          <Card className="text-center py-12 bg-card/95 backdrop-blur-sm">
             <CardContent>
               <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <CardTitle className="mb-2">No schools found</CardTitle>

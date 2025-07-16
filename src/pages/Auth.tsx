@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -6,7 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Eye, EyeOff, GraduationCap } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Auth() {
   const { user, profile, signIn, signUp, loading } = useAuth();
@@ -16,8 +20,10 @@ export default function Auth() {
     password: '',
     confirmPassword: '',
     firstName: '',
-    lastName: ''
+    lastName: '',
+    role: 'student' as 'student' | 'graduate' | 'admin'
   });
+  const { toast } = useToast();
 
   // Redirect authenticated users
   if (user && profile?.onboarding_completed) {
@@ -37,13 +43,41 @@ export default function Auth() {
     e.preventDefault();
     
     if (formData.password !== formData.confirmPassword) {
+      toast({
+        title: "Password mismatch",
+        description: "Passwords don't match",
+        variant: "destructive"
+      });
       return;
     }
 
-    await signUp(formData.email, formData.password, {
+    const { error } = await signUp(formData.email, formData.password, {
       first_name: formData.firstName,
       last_name: formData.lastName
     });
+
+    if (!error && formData.role !== 'student') {
+      // Update role after signup for admin/graduate users
+      setTimeout(async () => {
+        try {
+          const { error: roleError } = await supabase
+            .from('profiles')
+            .update({ role: formData.role })
+            .eq('email', formData.email);
+          
+          if (roleError) {
+            console.error('Error updating role:', roleError);
+          } else {
+            toast({
+              title: "Role updated",
+              description: `Account created with ${formData.role} role`
+            });
+          }
+        } catch (err) {
+          console.error('Error updating role:', err);
+        }
+      }, 2000);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -148,6 +182,20 @@ export default function Auth() {
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     required
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="role">Role</Label>
+                  <Select value={formData.role} onValueChange={(value: 'student' | 'graduate' | 'admin') => handleInputChange('role', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="student">Student</SelectItem>
+                      <SelectItem value="graduate">Graduate</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-2">

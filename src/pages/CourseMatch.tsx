@@ -1,7 +1,7 @@
 
 import { useAuth } from '@/hooks/useAuth';
 import { Navigation } from '@/components/Navigation';
-import { Footer } from '@/components/Footer';
+import Footer from '@/components/Footer';
 import { CourseMatchEngine } from '@/components/CourseMatchEngine';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
